@@ -9,6 +9,9 @@ namespace GeoCoding
     {
         private double lng;
 
+        /// <summary>
+        /// 经度
+        /// </summary>
         public double Lng
         {
             get { return lng; }
@@ -16,6 +19,9 @@ namespace GeoCoding
         }
         private double lat;
 
+        /// <summary>
+        /// 纬度
+        /// </summary>
         public double Lat
         {
             get { return lat; }
@@ -23,7 +29,7 @@ namespace GeoCoding
         }
         public override string ToString()
         {
-            return string.Format("{0},{1}", Lng, Lat);
+            return string.Format("{0},{1}", Lat, lng);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace GeoCoding.BaiDu
     public class BaiDuGeoCoding : IGeoCoding
     {
         private static ILog log = LogManager.GetLogger("BaiDuGeoCoding");
-        private static string _Url = "http://api.map.baidu.com/geocoder/v2/?";
+        private static string _Url = "http://api.map.baidu.com/geocoder/v2/";
         private static string _OutPut = "json";
         private static string _AK = "rYOka8cdCaads2RxGtK3ICfyDmkNNBaa";
         private static string _CallBack = "";
@@ -94,18 +94,17 @@ namespace GeoCoding.BaiDu
         }
         public Location GetLocation(string Address)
         {
-            string geturl = string.Format("address={1}&output={2}&ak={3}&callback={4}", Url, System.Web.HttpUtility.UrlDecode(Address), OutPut, AK, CallBack);
+            string geturl = string.Format("address={1}&output={2}&ak={3}", Url, System.Web.HttpUtility.UrlDecode(Address), OutPut, AK);
             Dictionary<string, string> query = new Dictionary<string, string>();
             query.Add("address", Address);
             query.Add("output", OutPut);
             query.Add("ak", AK);
-            query.Add("callback", CallBack);
 
             var queryString = HttpBuildQuery(query);
             var str = UrlEncode(Url + "?" + queryString + SK);
 
             query.Add("sn", MD5(str));
-            string FullUrl = HttpBuildQuery(query);
+            string FullUrl = Url + "?" + HttpBuildQuery(query);
             string JSON = GetJSON(FullUrl);
             LocationResult result = Newtonsoft.Json.JsonConvert.DeserializeObject<LocationResult>(JSON);
 
@@ -115,6 +114,7 @@ namespace GeoCoding.BaiDu
             }
             else
             {
+                log.Error(FullUrl + Environment.NewLine + result.Status + "\t" + result.Message);
                 return null;
             }
 
@@ -130,6 +130,7 @@ namespace GeoCoding.BaiDu
             query.Add("output", OutPut);
             query.Add("ak", AK);
             query.Add("callback", CallBack);
+            query.Add("pois", "0");
 
             var queryString = HttpBuildQuery(query);
             var str = UrlEncode(Url + "?" + queryString + SK);
@@ -145,6 +146,7 @@ namespace GeoCoding.BaiDu
             }
             else
             {
+                log.Error(FullUrl + Environment.NewLine + result.Status + "\t" + result.Message);
                 return null;
             }
 
@@ -226,5 +228,7 @@ namespace GeoCoding.BaiDu
             return sb.ToString();
         }
         #endregion
+
+
     }
 }

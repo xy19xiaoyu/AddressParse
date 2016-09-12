@@ -7,6 +7,13 @@ namespace GeoCoding.BaiDu
 {
     public class LocationResult
     {
+        private string _Message;
+
+        public string Message
+        {
+            get { return _Message; }
+            set { _Message = value; }
+        }
         private int _Status;
 
         public int Status

@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AddressComponent.cs" />
+    <Compile Include="BaiDu\AddressResult.cs" />
     <Compile Include="BaiDu\BaiDuGeoCoding.cs" />
     <Compile Include="BaiDu\LocationResult.cs" />
     <Compile Include="GeoCodingFactory.cs" />

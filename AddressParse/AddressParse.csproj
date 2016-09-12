@@ -51,6 +51,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BLL\BLL.csproj">
+      <Project>{1ED0CF77-C88B-487D-8ED9-56AC5FB7FB9F}</Project>
+      <Name>BLL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GeoCoding\GeoCoding.csproj">
       <Project>{86A8C34D-4A73-43F6-8A90-3F6F0A826110}</Project>
       <Name>GeoCoding</Name>
@@ -58,7 +62,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="log4net.config" />
+    <None Include="log4net.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

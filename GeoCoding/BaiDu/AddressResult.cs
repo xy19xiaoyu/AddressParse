@@ -14,16 +14,24 @@ namespace GeoCoding.BaiDu
             get { return _Status; }
             set { _Status = value; }
         }
-        private result _Result;
+        private string _Message;
 
-        public result Result
+        public string Message
+        {
+            get { return _Message; }
+            set { _Message = value; }
+        }
+
+        private ACresult _Result;
+
+        public ACresult Result
         {
             get { return _Result; }
             set { _Result = value; }
         }
-      
+
     }
-    public class result
+    public class ACresult
     {
         private AddressComponent _AddressComponent;
 

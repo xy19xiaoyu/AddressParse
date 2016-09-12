@@ -9,6 +9,9 @@ namespace GeoCoding
     {
         private string city;
 
+        /// <summary>
+        /// 城市
+        /// </summary>
         public string City
         {
             get { return city; }
@@ -16,6 +19,9 @@ namespace GeoCoding
         }
         private string country;
 
+        /// <summary>
+        /// 国家
+        /// </summary>
         public string Country
         {
             get { return country; }
@@ -23,6 +29,9 @@ namespace GeoCoding
         }
         private string district;
 
+        /// <summary>
+        /// 区域
+        /// </summary>
         public string District
         {
             get { return district; }
@@ -30,6 +39,7 @@ namespace GeoCoding
         }
         private string province;
 
+        //省
         public string Province
         {
             get { return province; }
@@ -37,6 +47,7 @@ namespace GeoCoding
         }
         private string street;
 
+        //街道
         public string Street
         {
             get { return street; }
@@ -44,10 +55,17 @@ namespace GeoCoding
         }
         private string street_number;
 
+        //街道编码
         public string Street_number
         {
             get { return street_number; }
             set { street_number = value; }
         }
+        public override string ToString()
+        {
+            return string.Format("");
+        }
+
+        
     }
 }
