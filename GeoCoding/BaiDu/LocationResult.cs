@@ -5,28 +5,31 @@ using System.Text;
 
 namespace GeoCoding.BaiDu
 {
+
     public class LocationResult
     {
-        private string _Message;
-
-        public string Message
-        {
-            get { return _Message; }
-            set { _Message = value; }
-        }
         private int _Status;
 
-        public int Status
+        public int status
         {
             get { return _Status; }
             set { _Status = value; }
         }
-        private result _Reuslt;
 
-        public result Reuslt
+        private string _Message;
+
+        public string message
         {
-            get { return _Reuslt; }
-            set { _Reuslt = value; }
+            get { return _Message; }
+            set { _Message = value; }
+        }
+
+        private result _Result;
+
+        public result Result
+        {
+            get { return _Result; }
+            set { _Result = value; }
         }
 
     }

@@ -63,7 +63,7 @@ namespace GeoCoding
         }
         public override string ToString()
         {
-            return string.Format("");
+            return string.Format("{0},{1},{2},{3},{4}", Country, Province, City, District, Street);
         }
 
         

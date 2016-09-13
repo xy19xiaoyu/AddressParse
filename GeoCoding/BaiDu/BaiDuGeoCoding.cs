@@ -100,21 +100,21 @@ namespace GeoCoding.BaiDu
             query.Add("output", OutPut);
             query.Add("ak", AK);
 
-            var queryString = HttpBuildQuery(query);
-            var str = UrlEncode(Url + "?" + queryString + SK);
+            //var queryString = HttpBuildQuery(query);
+            //var str = UrlEncode(Url + "?" + queryString + SK);
 
-            query.Add("sn", MD5(str));
+            //query.Add("sn", MD5(str));
             string FullUrl = Url + "?" + HttpBuildQuery(query);
             string JSON = GetJSON(FullUrl);
             LocationResult result = Newtonsoft.Json.JsonConvert.DeserializeObject<LocationResult>(JSON);
 
-            if (result.Status == 0)
+            if (result.status == 0)
             {
-                return result.Reuslt.Location;
+                return result.Result.Location;
             }
             else
             {
-                log.Error(FullUrl + Environment.NewLine + result.Status + "\t" + result.Message);
+                log.Error(FullUrl + Environment.NewLine + result.status + "\t");//+ result.message
                 return null;
             }
 
@@ -132,11 +132,11 @@ namespace GeoCoding.BaiDu
             query.Add("callback", CallBack);
             query.Add("pois", "0");
 
-            var queryString = HttpBuildQuery(query);
-            var str = UrlEncode(Url + "?" + queryString + SK);
+            //var queryString = HttpBuildQuery(query);
+            //var str = UrlEncode(Url + "?" + queryString + SK);
 
-            query.Add("sn", MD5(str));
-            string FullUrl = HttpBuildQuery(query);
+            //query.Add("sn", MD5(str));
+            string FullUrl =Url + "?" + HttpBuildQuery(query);
             string JSON = GetJSON(FullUrl);
             AddressResult result = Newtonsoft.Json.JsonConvert.DeserializeObject<AddressResult>(JSON);
 

@@ -55,7 +55,7 @@
     <Compile Include="BaiDu\LocationResult.cs" />
     <Compile Include="GeoCodingFactory.cs" />
     <Compile Include="Interface\IGeoCoding.cs" />
-    <Compile Include="Location.cs" />
+    <Compile Include="BaiDu\Location.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

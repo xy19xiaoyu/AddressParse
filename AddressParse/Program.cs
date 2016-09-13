@@ -11,6 +11,7 @@ namespace AddressParse
         static void Main(string[] args)
         {
             AddressOperator.Parse();
+            Console.Read();
         }
     }
 }
