@@ -30,7 +30,7 @@ namespace GeoCoding
         private string district;
 
         /// <summary>
-        /// 区域
+        /// 区县
         /// </summary>
         public string District
         {
@@ -39,7 +39,10 @@ namespace GeoCoding
         }
         private string province;
 
-        //省
+        /// <summary>
+        /// 省
+        /// </summary>
+
         public string Province
         {
             get { return province; }
@@ -47,7 +50,9 @@ namespace GeoCoding
         }
         private string street;
 
-        //街道
+        /// <summary>
+        /// 街道
+        /// </summary>
         public string Street
         {
             get { return street; }
