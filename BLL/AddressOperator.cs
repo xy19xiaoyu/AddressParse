@@ -12,6 +12,7 @@ namespace BLL
     public class AddressOperator
     {
         private static IGeoCoding geo = GeoCodingFactory.GetGeoCoding("baidu");
+        private static log4net.ILog log = log4net.LogManager.GetLogger("AddressOperator");
         public static void Parse()
         {
             int maxid = SQLiteDbAccess.ExecuteScalarInt("select max(sn) from address");
@@ -25,28 +26,31 @@ namespace BLL
                 {
                     while (!sr.EndOfStream)
                     {
-
+                        j++;
                         string rl = sr.ReadLine().Trim();
                         if (string.IsNullOrEmpty(rl)) continue;
-                        if (j % 1000 == 0)
+                        if (j % 10 == 0)
                         {
                             Console.WriteLine(j);
                         }
                         string[] aryrl = rl.Split('|');
                         string sn = aryrl[0];
                         string an = aryrl[1];
-                        int ian = 0;
-                        if (!int.TryParse(an, out ian))
+                        int isn = 0;
+                        if (!int.TryParse(sn, out isn))
                         {
                             continue;
                         }
-                        if (maxid >= ian) continue;
+                        if (maxid >= isn) continue;
                         string address = aryrl[15];
-                        Location location = geo.GetLocation(address);
-                        if (location == null) continue;
-                        AddressComponent AC = geo.GetAddressComponent(location);
-                        if (AC == null) continue;
-                        string sql = string.Format(@"
+                        try
+                        {
+
+                            Location location = geo.GetLocation(address);
+                            if (location == null) continue;
+                            AddressComponent AC = geo.GetAddressComponent(location);
+                            if (AC == null) continue;
+                            string sql = string.Format(@"
                                 insert into 
                                  address 
                                     (
@@ -74,7 +78,13 @@ namespace BLL
                                     '{8}',
                                     '{9}' 
                                     )", sn, an, address, AC.Country, AC.Province, AC.City, AC.District, AC.Street, location.Lng, location.Lat);
-                        SQLiteDbAccess.ExecNoQuery(sql);
+                            SQLiteDbAccess.ExecNoQuery(sql);
+                        }
+                        catch (Exception ex)
+                        {
+                            log.Error(ex.ToString());
+                        }
+
                     }
 
                 }
