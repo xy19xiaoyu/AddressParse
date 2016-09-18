@@ -115,8 +115,13 @@ namespace GeoCoding.BaiDu
             else
             {
                 log.Error(FullUrl + Environment.NewLine + result.status + "\t");//+ result.message
+                if (result.status > 300)
+                {
+                    Environment.Exit(0);
+                }
                 return null;
             }
+
 
         }
 
@@ -136,7 +141,7 @@ namespace GeoCoding.BaiDu
             //var str = UrlEncode(Url + "?" + queryString + SK);
 
             //query.Add("sn", MD5(str));
-            string FullUrl =Url + "?" + HttpBuildQuery(query);
+            string FullUrl = Url + "?" + HttpBuildQuery(query);
             string JSON = GetJSON(FullUrl);
             AddressResult result = Newtonsoft.Json.JsonConvert.DeserializeObject<AddressResult>(JSON);
 
@@ -147,6 +152,10 @@ namespace GeoCoding.BaiDu
             else
             {
                 log.Error(FullUrl + Environment.NewLine + result.Status + "\t" + result.Message);
+                if (result.Status > 300)
+                {
+                    Environment.Exit(0);
+                }
                 return null;
             }
 
