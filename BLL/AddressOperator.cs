@@ -15,8 +15,6 @@ namespace BLL
         private static log4net.ILog log = log4net.LogManager.GetLogger("AddressOperator");
         public static void Parse()
         {
-            int maxid = SQLiteDbAccess.ExecuteScalarInt("select max(sn) from address");
-            Console.WriteLine(maxid);
             string[] files = Directory.GetFiles(@"\\192.168.70.10\f$\CN_Process\target", "CN_Index_INDI.txt", SearchOption.AllDirectories);
             int j = 0;
             int tmpi = 0;
@@ -41,12 +39,10 @@ namespace BLL
                         string city = aryrl[14];
                         string address = aryrl[15];
                         int cityno = 0;
-                        int isn = 0;
-                        if (!int.TryParse(sn, out isn))
+                        if (SQLiteDbAccess.ExecuteScalarInt("select count(*) from address where sn=" + sn) == 1)
                         {
                             continue;
                         }
-                        if (maxid >= isn) continue;
 
                         string sql = sql = string.Format(@"
                                         insert into 
@@ -68,11 +64,10 @@ namespace BLL
                         //如果不是中国地址
                         if (!int.TryParse(city, out cityno))
                         {
-                            Console.Write(city);
                             //直接插入SQL 
                             SQLiteDbAccess.ExecNoQuery(sql);
                             continue;
-                        }                      
+                        }
 
 
 
