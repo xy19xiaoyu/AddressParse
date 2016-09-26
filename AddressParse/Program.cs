@@ -10,6 +10,8 @@ namespace AddressParse
     {
         static void Main(string[] args)
         {
+            AddressOperator.TestRedis();
+            AddressOperator.iniRedis();
             AddressOperator.Parse();
             Console.Read();
         }

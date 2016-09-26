@@ -6,6 +6,8 @@ using GeoCoding.Interface;
 using GeoCoding.BaiDu;
 using GeoCoding;
 using System.IO;
+
+using System.Data;
 using DBA;
 namespace BLL
 {
@@ -13,6 +15,7 @@ namespace BLL
     {
         private static IGeoCoding geo = GeoCodingFactory.GetGeoCoding("baidu");
         private static log4net.ILog log = log4net.LogManager.GetLogger("AddressOperator");
+        private static RedisBoost.IRedisClient rc = RedisBoost.RedisClient.ConnectAsync("localhost", 6379).Result;
         public static void Parse()
         {
             string[] files = Directory.GetFiles(@"\\192.168.70.10\f$\CN_Process\target", "CN_Index_INDI.txt", SearchOption.AllDirectories);
@@ -39,11 +42,11 @@ namespace BLL
                         string city = aryrl[14];
                         string address = aryrl[15];
                         int cityno = 0;
-                        if (SQLiteDbAccess.ExecuteScalarInt("select count(*) from address where sn=" + sn) == 1)
+                        if (!rc.GetAsync(sn).Result.IsNull)
                         {
                             continue;
                         }
-
+                        rc.SetAsync(sn, true);
                         string sql = sql = string.Format(@"
                                         insert into 
                                          address 
@@ -107,7 +110,7 @@ namespace BLL
                                             '{7}',
                                             '{8}',
                                             '{9}' 
-                                            )", sn, an, address, AC.Country, AC.Province, AC.City, AC.District, AC.Street, location.Lng, location.Lat);
+                                            )", sn, an, address.Replace("'", "").Replace(",", ""), AC.Country, AC.Province, AC.City, AC.District, AC.Street, location.Lng, location.Lat);
                                 }
                             }
                             SQLiteDbAccess.ExecNoQuery(sql);
@@ -126,8 +129,45 @@ namespace BLL
             //写 转换后的地址信息
         }
 
+        public static void TestRedis()
+        {
+            rc.SetAsync("xy", "123");
+            RedisBoost.MSetArgs[] sns = new RedisBoost.MSetArgs[2];
+            sns[0] = new RedisBoost.MSetArgs("xy1", "xy1");
+            sns[1] = new RedisBoost.MSetArgs("xy2", "xy2");
+            rc.MSetAsync(sns);
+            Console.WriteLine(rc.GetAsync("xy").Result.As<string>().ToString());
+            Console.WriteLine(rc.GetAsync("xy1").Result.As<string>().ToString());
+            Console.WriteLine(rc.GetAsync("xy2").Result.As<string>().ToString());
+            rc.DelAsync("xy");
+            rc.DelAsync("xy1");
+            rc.DelAsync("xy2");
+            Console.WriteLine("Redis test over");
+
+        }
+        public static void iniRedis()
+        {
+            for (int i = 0; i < 5718698; i += 10000)
+            {
+                string sql = string.Format("select sn from address where id between {0} and {1}", i, i + 10000);
+                var dt = SQLiteDbAccess.GetDataTable(sql);
+                RedisBoost.MSetArgs[] sns = new RedisBoost.MSetArgs[dt.Rows.Count];
+                int tmpi = 0;
+                foreach (DataRow row in dt.Rows)
+                {
+                    sns[tmpi] = new RedisBoost.MSetArgs(row["sn"].ToString(), true);
+                    tmpi++;
+                }
+
+                rc.MSetAsync(sns);
+                Console.WriteLine(i);
+            }
+
+        }
         public static void test()
         {
+
+
 
 
             string[] addresses = {
