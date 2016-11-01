@@ -16,7 +16,7 @@ namespace BLL
         private static IGeoCoding geo = GeoCodingFactory.GetGeoCoding("baidu");
         private static log4net.ILog log = log4net.LogManager.GetLogger("AddressOperator");
         private static RedisBoost.IRedisClient rc = RedisBoost.RedisClient.ConnectAsync("localhost", 6379).Result;
-        public static void Parse()
+        public static void Parse(object obj)
         {
             string[] files = Directory.GetFiles(@"\\192.168.70.10\f$\CN_Process\target", "CN_Index_INDI.txt", SearchOption.AllDirectories);
             int j = 0;
@@ -46,7 +46,7 @@ namespace BLL
                         {
                             continue;
                         }
-                        rc.SetAsync(sn, true);
+
                         string sql = sql = string.Format(@"
                                         insert into 
                                          address 
@@ -68,7 +68,16 @@ namespace BLL
                         if (!int.TryParse(city, out cityno))
                         {
                             //直接插入SQL 
-                            SQLiteDbAccess.ExecNoQuery(sql);
+                            try
+                            {
+                                SQLiteDbAccess.ExecNoQuery(sql);
+                                rc.SetAsync(sn, true);
+                            }
+                            catch (Exception ex)
+                            {
+                                log.Error(ex);
+                                continue;
+                            }
                             continue;
                         }
 
@@ -81,6 +90,7 @@ namespace BLL
                             {
 
                                 AddressComponent AC = geo.GetAddressComponent(location);
+
                                 if (AC != null)
                                 {
                                     sql = string.Format(@"
@@ -112,8 +122,25 @@ namespace BLL
                                             '{9}' 
                                             )", sn, an, address.Replace("'", "").Replace(",", ""), AC.Country, AC.Province, AC.City, AC.District, AC.Street, location.Lng, location.Lat);
                                 }
+                                else
+                                {
+                                    if (AC.Country == "0")
+                                    {
+                                        Console.WriteLine("API FULL");
+                                        return;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (location.Lat == 0d && location.Lng == 0d)
+                                {
+                                    Console.WriteLine("API FULL");
+                                    return;
+                                }
                             }
                             SQLiteDbAccess.ExecNoQuery(sql);
+                            rc.SetAsync(sn, true);
 
                         }
                         catch (Exception ex)

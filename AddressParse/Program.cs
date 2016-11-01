@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using BLL;
+using System.Threading;
 
 namespace AddressParse
 {
@@ -12,7 +13,9 @@ namespace AddressParse
         {
             AddressOperator.TestRedis();
             AddressOperator.iniRedis();
-            AddressOperator.Parse();
+            object tmp = new object();
+            Timer t = new Timer(new TimerCallback(AddressOperator.Parse), tmp, 0, 1000 * 60 * 60 * 24); 
+            //AddressOperator.Parse();
             Console.Read();
         }
     }

@@ -117,7 +117,7 @@ namespace GeoCoding.BaiDu
                 log.Error(FullUrl + Environment.NewLine + result.status + "\t");//+ result.message
                 if (result.status > 300)
                 {
-                    Environment.Exit(0);
+                    return new Location() { Lat = 0, Lng = 0 };
                 }
                 return null;
             }
@@ -154,7 +154,7 @@ namespace GeoCoding.BaiDu
                 log.Error(FullUrl + Environment.NewLine + result.Status + "\t" + result.Message);
                 if (result.Status > 300)
                 {
-                    Environment.Exit(0);
+                    return new AddressComponent() { Country = "0" };
                 }
                 return null;
             }
